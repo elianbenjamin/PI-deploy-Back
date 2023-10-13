@@ -24,18 +24,18 @@ const getGame = async (_req, res) => {
         axios.get(`https://api.rawg.io/api/games?key=c0b6dc79f407436cbcf3ca1f02d1e6a8&page=${page}&page_size=${limit}`)
     );
 
-    // Lanza todas las promesas a la vez
+    
     const allData = await Promise.all([videogamesDbPromise, ...apiPromises]);
 
     const videogamesDb = allData[0]; 
-    const apiResults = allData.slice(1); // Todas las respuestas de API
+    const apiResults = allData.slice(1); 
 
     const dbGenres = videogamesDb.map((game) => ({
       ...game.toJSON(),
       genres: game.genres.map((genre) => genre.name),
     }));
 
-    // Une todos los resultados de la API en una sola matriz
+    
     const allApiVideogames = apiResults.flatMap(({ data: { results }}) => 
       results.map((game) => ({
         id: game.id,
@@ -54,7 +54,7 @@ const getGame = async (_req, res) => {
       ...allApiVideogames,  
     ];
     
-    return res.send(allVideogames); //status(200)
+    return res.send(allVideogames); 
     
   } catch (error) {
     res.status(400).json({ error: error.message });
